@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<HTML>
+	<HEAD>
+		<TITLE>The Canvas Tag</TITLE>
+	</HEAD>
+
+	<HEADER>
+		<P>Click in the box to begin, W, A, S, D keys to move</P>
+	</HEADER>
+
+	<SCRIPT>
+
+		var ctx;
+		var x = 100;
+		var y = 100;
+		var dx = 5;
+		var dy = 5;
+    var myRect = {
+      x: 10,
+      y: 10,
+      width: 20,
+      height: 20
+    };
+		var myBall = {
+			x: 40,
+			y: 50,
+			r: 7
+		}
+		up = false;
+		down = false;
+		left = false;
+		right = false;
+
+		function init() {
+			ctx = canvas.getContext("2d");
+			setInterval(drawRect, 40);
+		}
+
+		function onKeyDown(evt) {
+			if (evt.keyCode == 87) {
+				up = true;
+				down = false;
+				left = false;
+				right = false;
+			}
+			else if (evt.keyCode == 83) {
+				down = true;
+				up = false;
+				left = false;
+				right = false;
+			}
+			else if (evt.keyCode == 65) {
+				up = false;
+				down = false;
+				left = true;
+				right = false;
+			}
+			else if (evt.keyCode == 68) {
+				up = false;
+				down = false;
+				left = false;
+				right = true;
+			}
+		}
+
+		document.addEventListener("keydown", onKeyDown, false);
+
+    function drawRect() {
+			ctx.clearRect(0, 0, 500, 400);
+			drawMyBall();
+      ctx.beginPath();
+      ctx.fillStyle = '#8ED6FF';
+      ctx.rect(myRect.x, myRect.y, myRect.width, myRect.height);
+			ctx.closePath();
+      ctx.fill();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'black';
+      ctx.stroke();
+			if (myRect.x > 500 - myRect.width) myRect.x = 0;
+			if (myRect.x < 0) myRect.x = 500 - myRect.width;
+			if (myRect.y > 400 - myRect.height) myRect.y = 0;
+			if (myRect.y < 0) myRect.y = 400 - myRect.height;
+
+			if (up) {
+				myRect.y -= dy;
+			}
+
+			if (down) {
+				myRect.y += dy;
+			}
+
+			if (left) {
+				myRect.x -= dx
+			}
+
+			if (right) {
+				myRect.x += dx;
+			}
+
+			// console.log("Ball Position = " + myBall.x + " " + myBall.y);
+			// console.log("Snake Position = " + myRect.x + " " + myRect.y);
+
+			if (collision()) {
+				myBall.x = Math.random() * (500 - 10) - 10;
+				myBall.y = Math.random() * (400 - 10) - 10;
+				myRect.width += 10;
+			}
+
+    }
+
+		function drawMyBall() {
+			ctx.fillStyle = "#0000ff";
+			ctx.arc(myBall.x, myBall.y, myBall.r, 0, Math.PI*2, true);
+			ctx.fill();
+		}
+
+		function collision() {
+			if (myRect.x < myBall.x + 15 && myRect.x > myBall.x - 15 && myRect.y < myBall.y + 20 && myRect.y > myBall.y - 20) {
+				console.log("HIT!");
+				return true;
+			}
+		}
+
+	</SCRIPT>
+
+	<BODY onLoad="init();">
+		<SECTION style="border-style: solid; border-width: 2px; width: 500px;">
+			<CANVAS id="canvas" WIDTH="500" HEIGHT="400">
+			</CANVAS>
+		</SECTION>
+	</BODY>
+
+</HTML>
