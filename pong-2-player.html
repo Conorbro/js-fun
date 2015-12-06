@@ -3,14 +3,14 @@
   <p id="player-2-score-display"></p>
       <script>
 
-        // document.addEventListener("keydown", onKeyDown, false);
         var context;
         var width = 500;
         var height = 400;
         var ballX = width/2;
         var ballY = height/2;
+        var ballRadius = 10
         var paddleWidth = 15;
-        var paddleHeight = 85;
+        var paddleHeight = 100;
         var paddleX1 = 0;
         var paddleY1 = 0;
         var paddleX2 = width - paddleWidth;
@@ -25,16 +25,26 @@
         var dy = 5;
         var player1Score = 0;
         var player2Score = 0;
+        var wait = false;
+        var goalSound = new Audio("goal.wav");
+        var hitSound = new Audio("hit.wav");
+        var wallHitSound = new Audio("wallHit.wav");
 
         function init() {
           context = myCanvas.getContext('2d');
-          setInterval(gameLoop, 20); //Draws new frame every 20ms
+          setInterval(gameLoop, 15); //Draws new frame every 20ms
         }
 
         function gameLoop() {
-          draw();
-          checkCollisions();
-          movePaddles();
+          if(wait) {
+            setTimeout(function() {
+              wait = false;
+            }, 250);
+          } else {
+            draw();
+            checkCollisions();
+            movePaddles();
+          }
         }
 
         function draw() {
@@ -44,30 +54,40 @@
           context.beginPath();
           context.rect(paddleX1, paddleY1, paddleWidth, paddleHeight);
           context.rect(paddleX2, paddleY2, paddleWidth, paddleHeight);
+          context.arc(ballX, ballY, ballRadius, 0, Math.PI*2, true);
           context.fillStyle = "#000000";
-          context.arc(ballX, ballY, 10, 0, Math.PI*2, true); // Draws circle of r=20 at x,y
           context.closePath();
           context.fill();
         }
 
         function checkCollisions() {
-          if ( ballX<0) { // Check if a point has been scored
+          if ( ballX <= paddleWidth - 5) { // Check if a point has been scored
             ballX = width/2 - 10;
             player2Score += 1;
+            goalSound.play();
+            dx = -dx;
+            wait = true;
           }
-          if (ballX>width) {
+          if (ballX >= width - paddleWidth + 5) {
             ballX = width/2 - 10;
             player1Score += 1;
+            goalSound.play();
+            dx = -dx;
+            wait = true;
           }
           if ( ballY<0 || ballY>height) { // check if ball hits roof or floor
             dy = -dy;
+            wallHitSound.play();
           }
           if (ballX <= paddleX1 + paddleWidth && ballY <= paddleY1 + paddleHeight && ballY >= paddleY1) {
+            hitSound.play();
             dx = -dx;
           }
           if (ballX >= paddleX2 && ballY <= paddleY2 + paddleHeight && ballY >= paddleY2) {
+            hitSound.play();
             dx = -dx;
           }
+
           ballX += dx;
           ballY += dy;
         }
@@ -95,7 +115,7 @@
           }
         }
 
-        // Event Listeners for paddle controlls
+        // Event Listeners for paddle controls
       	function onKeyDownPlayer1(evt) {
       		if (evt.keyCode == 87) {
             p1Up = true;
