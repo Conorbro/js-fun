@@ -10,7 +10,7 @@
         var ballX = width/2;
         var ballY = height/2;
         var paddleWidth = 15;
-        var paddleHeight = 100;
+        var paddleHeight = 85;
         var paddleX1 = 0;
         var paddleY1 = 0;
         var paddleX2 = width - paddleWidth;
@@ -28,7 +28,7 @@
 
         function init() {
           context = myCanvas.getContext('2d');
-          setInterval(gameLoop, 20); //Draws new frame every 10ms
+          setInterval(gameLoop, 20); //Draws new frame every 20ms
         }
 
         function gameLoop() {
@@ -42,8 +42,8 @@
           document.getElementById("player-2-score-display").innerHTML = "Player 2 Score = " + player2Score;
           context.clearRect(0, 0, width, height);
           context.beginPath();
-          context.rect(paddleX1, paddleY1, 15, 100);
-          context.rect(paddleX2, paddleY2, 15, 100);
+          context.rect(paddleX1, paddleY1, paddleWidth, paddleHeight);
+          context.rect(paddleX2, paddleY2, paddleWidth, paddleHeight);
           context.fillStyle = "#000000";
           context.arc(ballX, ballY, 10, 0, Math.PI*2, true); // Draws circle of r=20 at x,y
           context.closePath();
@@ -79,7 +79,7 @@
                }
           }
           if(p1Down) {
-            if (paddleY1 <= height - 100) {
+            if (paddleY1 <= height - paddleHeight) {
                  paddleY1 += paddle1Dy;
                }
           }
@@ -89,7 +89,7 @@
                }
           }
           if(p2Down) {
-            if (paddleY2 <= height - 100) {
+            if (paddleY2 <= height - paddleHeight) {
                  paddleY2 += paddle2Dy;
                }
           }
