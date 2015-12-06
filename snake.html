@@ -25,6 +25,8 @@
 		var score = 0;
 		var highscore = 0;
 		var snake_array;
+		var width = 510;
+		var height = 410;
 		var powerUp = {
 			x: 0,
 			y: 0
@@ -56,23 +58,23 @@
 
 		function makePowerUp() {
 			powerUp = {
-				x: Math.round((Math.random() * (500 - 10) - 10)/10),
-				y: Math.round((Math.random() * (400 - 10) - 10)/10)
+				x: Math.round((Math.random() * (width - 10) - 10)/10) + 2,
+				y: Math.round((Math.random() * (height - 10) - 10)/10) + 2
 			};
 		}
 
     function gameLoop() {
-			ctx.clearRect(0, 0, 500, 400);
+			ctx.clearRect(0, 0, width, height);
 			document.getElementById("score-display").innerHTML = "Score = " + score;
 			// drawPowerUp(myBall.x, myBall.y);
 			var nx = snake_array[0].x;
 			var ny = snake_array[0].y;
 
 			// Checks if snake goes through an edge
-			if (nx*10 > 500) nx = 0;
-			if (nx*10 < 0) nx = (500)/10;
-			if (ny*10 > 400) ny = 0;
-			if (ny*10 < 0) ny = (400)/10;
+			if (nx*10 > width) nx = 0;
+			if (nx*10 < 0) nx = (width)/10;
+			if (ny*10 > height) ny = 0;
+			if (ny*10 < 0) ny = (height)/10;
 
 			// Checks direction
 			if (dir === "up") {
@@ -167,8 +169,8 @@
 	</SCRIPT>
 
 	<BODY onLoad="init();">
-		<SECTION style="border-style: solid; border-width: 2px; width: 500px;">
-			<CANVAS id="canvas" WIDTH="500" HEIGHT="400">
+		<SECTION style="border-style: solid; border-width: 2px; width: 510px; height: 410px">
+			<CANVAS id="canvas" WIDTH="510" HEIGHT="410">
 			</CANVAS>
 		</SECTION>
 	</BODY>

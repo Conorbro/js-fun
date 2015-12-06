@@ -1,0 +1,149 @@
+<html>
+	<p font = "sans-serif" id="player-1-score-display"></p>
+  <p id="player-2-score-display"></p>
+      <script>
+
+        // document.addEventListener("keydown", onKeyDown, false);
+        var context;
+        var width = 500;
+        var height = 400;
+        var ballX = width/2;
+        var ballY = height/2;
+        var paddleWidth = 15;
+        var paddleHeight = 100;
+        var paddleX1 = 0;
+        var paddleY1 = 0;
+        var paddleX2 = width - paddleWidth;
+        var paddleY2 = height - paddleHeight;
+        var paddle1Dy = 5;
+        var paddle2Dy = 5;
+        var p1Up = false;
+        var p1Down= false;
+        var p2Up = false;
+        var p2Down = false;
+        var dx = 5;
+        var dy = 5;
+        var player1Score = 0;
+        var player2Score = 0;
+
+        function init() {
+          context = myCanvas.getContext('2d');
+          setInterval(gameLoop, 20); //Draws new frame every 10ms
+        }
+
+        function gameLoop() {
+          draw();
+          checkCollisions();
+          movePaddles();
+        }
+
+        function draw() {
+          document.getElementById("player-1-score-display").innerHTML = "Player 1 Score = " + player1Score;
+          document.getElementById("player-2-score-display").innerHTML = "Player 2 Score = " + player2Score;
+          context.clearRect(0, 0, width, height);
+          context.beginPath();
+          context.rect(paddleX1, paddleY1, 15, 100);
+          context.rect(paddleX2, paddleY2, 15, 100);
+          context.fillStyle = "#000000";
+          context.arc(ballX, ballY, 10, 0, Math.PI*2, true); // Draws circle of r=20 at x,y
+          context.closePath();
+          context.fill();
+        }
+
+        function checkCollisions() {
+          if ( ballX<0) { // Check if a point has been scored
+            ballX = width/2 - 10;
+            player2Score += 1;
+          }
+          if (ballX>width) {
+            ballX = width/2 - 10;
+            player1Score += 1;
+          }
+          if ( ballY<0 || ballY>height) { // check if ball hits roof or floor
+            dy = -dy;
+          }
+          if (ballX <= paddleX1 + paddleWidth && ballY <= paddleY1 + paddleHeight && ballY >= paddleY1) {
+            dx = -dx;
+          }
+          if (ballX >= paddleX2 && ballY <= paddleY2 + paddleHeight && ballY >= paddleY2) {
+            dx = -dx;
+          }
+          ballX += dx;
+          ballY += dy;
+        }
+
+        function movePaddles(){
+          if(p1Up) {
+            if (paddleY1 >= 0) {
+      			     paddleY1 -= paddle1Dy;
+               }
+          }
+          if(p1Down) {
+            if (paddleY1 <= height - 100) {
+                 paddleY1 += paddle1Dy;
+               }
+          }
+          if(p2Up) {
+            if (paddleY2 >= 0) {
+                 paddleY2 -= paddle2Dy;
+               }
+          }
+          if(p2Down) {
+            if (paddleY2 <= height - 100) {
+                 paddleY2 += paddle2Dy;
+               }
+          }
+        }
+
+        // Event Listeners for paddle controlls
+      	function onKeyDownPlayer1(evt) {
+      		if (evt.keyCode == 87) {
+            p1Up = true;
+            p1Down = false;
+      		}
+      		else if (evt.keyCode == 83) {
+            p1Down = true;
+            p1Up = false;
+      		}
+    		}
+        function onKeyDownPlayer2(evt) {
+          if (evt.keyCode == 38) {
+            p2Up = true;
+            p2Down = false;
+          }
+          else if (evt.keyCode == 40) {
+            p2Down = true;
+            p2Up = false;
+          }
+        }
+        function onKeyUpPlayer1(evt) {
+      		if (evt.keyCode == 87) {
+            p1Up = false;
+      		}
+      		else if (evt.keyCode == 83) {
+            p1Down = false;
+      		}
+    		}
+        function onKeyUpPlayer2(evt) {
+          if (evt.keyCode == 38) {
+            p2Up = false;
+          }
+          else if (evt.keyCode == 40) {
+            p2Down = false;
+          }
+        }
+
+        document.addEventListener("keydown", onKeyDownPlayer1);
+        document.addEventListener("keydown", onKeyDownPlayer2);
+        document.addEventListener("keyup", onKeyUpPlayer1);
+        document.addEventListener("keyup", onKeyUpPlayer2);
+      </script>
+
+  <body onLoad="init();">
+    <section style = "border-style: solid; border-widt: 2px; width: 500px;">
+      <canvas id="myCanvas" width="500" height="400">
+      </canvas>
+    </section>
+  </body>
+
+</html>
