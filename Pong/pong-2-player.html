@@ -1,5 +1,8 @@
 <html>
-	<p font = "sans-serif" id="player-1-score-display"></p>
+<title>Pong!</title>
+	<p><img src="computer_key_W.png" height="32" width="32"> <img src="computer_key_S.png" height="32" width="32"> Controls Player 1 - <img src="computer_key_Arrow_Up.png" height="32" width="32"><img src="computer_key_Arrow_Down.png" height="32" width="32"> Controls Player 2</p>
+	<p>Press <img src="computer_key_Space_bar.png" height="32" width="200"> To Start!</p>
+	<p id="player-1-score-display"></p>
   <p id="player-2-score-display"></p>
       <script>
 
@@ -15,8 +18,8 @@
         var paddleY1 = 0;
         var paddleX2 = width - paddleWidth;
         var paddleY2 = height - paddleHeight;
-        var paddle1Dy = 5;
-        var paddle2Dy = 5;
+        var paddle1Dy = 7;
+        var paddle2Dy = 7;
         var p1Up = false;
         var p1Down= false;
         var p2Up = false;
@@ -25,18 +28,19 @@
         var dy = 5;
         var player1Score = 0;
         var player2Score = 0;
+				var start = false;
         var wait = false;
         var goalSound = new Audio("goal.wav");
         var hitSound = new Audio("hit.wav");
         var wallHitSound = new Audio("wallHit.wav");
 
         function init() {
-          context = myCanvas.getContext('2d');
-          setInterval(gameLoop, 15); //Draws new frame every 20ms
+        	context = myCanvas.getContext('2d');
+        	setInterval(gameLoop, 15); //Draws new frame every 20ms
         }
 
         function gameLoop() {
-          if(wait) {
+					if(wait) {
             setTimeout(function() {
               wait = false;
             }, 250);
@@ -153,13 +157,21 @@
           }
         }
 
+				function onKeyDownStartGame(evt) {
+					if(evt.keyCode == 32 && start == false) {
+						init();
+						start = true
+					}
+				}
+
+				document.addEventListener("keydown", onKeyDownStartGame);
         document.addEventListener("keydown", onKeyDownPlayer1);
         document.addEventListener("keydown", onKeyDownPlayer2);
         document.addEventListener("keyup", onKeyUpPlayer1);
         document.addEventListener("keyup", onKeyUpPlayer2);
       </script>
 
-  <body onLoad="init();">
+  <body>
     <section style = "border-style: solid; border-widt: 2px; width: 500px;">
       <canvas id="myCanvas" width="500" height="400">
       </canvas>
